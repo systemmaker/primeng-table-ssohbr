@@ -17,8 +17,8 @@ export class CarService {
       .then(data => { return data; });
     }
 
-    getCarsMedium() {
-    return this.http.get<any>('assets/showcase/data/cars-medium.json')
+    getTableSource() {
+    return this.http.get<any>('assets/showcase/tableSource/table.json')
       .toPromise()
       .then(res => <Car[]>res.data)
       .then(data => { return data; });

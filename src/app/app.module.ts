@@ -15,7 +15,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {TooltipModule} from 'primeng/tooltip';
 import {MenuModule} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
-
+import {DialogModule} from 'primeng/dialog';
 @NgModule({
   imports:      [ 
     BrowserModule, 
@@ -23,6 +23,7 @@ import {MenuItem} from 'primeng/api';
     TableModule, 
     TabViewModule,
     ButtonModule,
+    DialogModule,
     DropdownModule,
     TooltipModule,
     MenuModule,
