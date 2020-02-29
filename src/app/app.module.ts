@@ -16,6 +16,8 @@ import {TooltipModule} from 'primeng/tooltip';
 import {MenuModule} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
+
+import {MultiSelectModule} from 'primeng/multiselect';
 @NgModule({
   imports:      [ 
     BrowserModule, 
@@ -25,6 +27,7 @@ import {DialogModule} from 'primeng/dialog';
     ButtonModule,
     DialogModule,
     DropdownModule,
+    MultiSelectModule,
     TooltipModule,
     MenuModule,
     CommonModule, 

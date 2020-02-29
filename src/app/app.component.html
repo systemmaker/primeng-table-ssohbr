@@ -8,15 +8,34 @@
 <p-menu #menu [popup]="true" [model]="cities2"></p-menu>
 <button type="button" pButton icon="fa fa-fw fa-list" label="Show" (click)="menu.toggle($event)"></button>
 <hr>
-<p-table [columns]="cols" [value]="cars" [lazy]="true" (onLazyLoad)="loadCarsLazy($event)" 
-    [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="pageSizeOptions" 
-    [defaultSortOrder]="-1" dataKey="vin" [resizableColumns]="true" columnResizeMode="fit"
-    selectionMode="single" [(selection)]="selectedCar" (onRowSelect)="onRowSelect($event)">
+<!-- [lazy]="true" (onLazyLoad)="loadCarsLazy($event)"  -->
+<p-table #dt [columns]="cols" [value]="cars" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" 
+[rowsPerPageOptions]="pageSizeOptions" dataKey="vin" [resizableColumns]="true" columnResizeMode="fit" selectionMode="single" [(selection)]="selectedCar" 
+(onRowSelect)="onRowSelect($event)" styleClass="ui-table-cars" > 
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+            <!-- [pSortableColumn]="col.field" -->
+            <th *ngFor="let col of columns"  [ngSwitch]="col.field">
                 {{col.header}}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input *ngSwitchCase="'vin'" pInputText type="text" placeholder="Starts with" class="ui-column-filter" style="width: 100%;" (input)="dt.filter($event.target.value, col.field, 'startsWith')">
+                <input *ngSwitchCase="'year'" pInputText type="text" placeholder="Contains" class="ui-column-filter" style="width: 100%;" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <p-dropdown *ngSwitchCase="'brand'" [options]="brands" styleClass="ui-column-filter" [showClear]="true" [style]="{'width':'100%'}" placeholder="Select a Brand" (onChange)="dt.filter($event.value, col.field, 'equals')">
+                    <ng-template let-item pTemplate="selectedItem">
+                        <img src="assets/showcase/images/demo/car/{{item.label}}.png" style="width:16px;vertical-align:middle" />
+                        <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
+                    </ng-template>
+                    <ng-template let-car pTemplate="item">
+                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                            <img src="assets/showcase/images/demo/car/{{car.label}}.png" style="width:24px;position:absolute;top:1px;left:5px"/>
+                            <div style="font-size:14px;float:right;margin-top:4px">{{car.label}}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                <p-multiSelect *ngSwitchCase="'color'" [options]="colors" [filter]="false"  styleClass="ui-column-filter" [style]="{'width':'100%'}"  defaultLabel="Select a color" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+            </th>
+            <th style="width: 8em; text-align: center;">
+                <button pButton type="button" icon="pi pi-cog"></button>
             </th>
         </tr>
     </ng-template>
@@ -25,35 +44,13 @@
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-        <tr>
-          <td [attr.colspan]="columns.length + 2">
-                <div class="ui-g ui-fluid" style="font-size:16px;padding:20px">
-                    <div class="ui-g-12 ui-md-3" style="text-align:center">
-                        <img [attr.alt]="rowData.brand" src="assets/showcase/images/demo/car/{{rowData.brand}}.png">
-                    </div>
-                    <div class="ui-g-12 ui-md-9">
-                        <div class="ui-g">
-                            <div class="ui-g-12">
-                                <b>Vin:</b> {{rowData.vin}}
-                            </div>
-                            <div class="ui-g-12">
-                                <b>Year:</b> {{rowData.year}}
-                            </div>
-                            <div class="ui-g-12">
-                                <b>Brand:</b> {{rowData.brand}}
-                            </div>
-                            <div class="ui-g-12">
-                                <b>Color:</b> {{rowData.color}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <td>
+                <button pButton type="button" class="ui-button-success" icon="pi pi-search" style="margin-right: .5em"></button>
+                <button pButton type="button" class="ui-button-warning" icon="pi pi-pencil"></button>
             </td>
         </tr>
     </ng-template>
+    
      <ng-template pTemplate="summary" let-rowData>
         <div style="text-align:left">
             <button type="button" pButton icon="fa fa-plus" (click)="showDialogToAdd()" label="Add"></button>
@@ -98,8 +95,47 @@
     </div>
     <p-footer>
         <div class="ui-dialog-buttonpane ui-helper-clearfix">
-            <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Delete"></button>
             <button type="button" pButton icon="fa fa-check" (click)="save()" label="Save"></button>
+            <button type="button" pButton icon="fa fa-close" (click)="delete()" label="Delete"></button>
+            <button type="button" pButton icon="fa fa-window-close" (click)="cancel()" label="Cancel"></button>
         </div>
     </p-footer>
 </p-dialog>
+
+
+
+<p-table [columns]="cols" [value]="cars" [paginator]="true" [rows]="10">
+    <!-- <ng-template pTemplate="caption">
+        <div style="text-align: right">        
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+        </div>
+    </ng-template> -->
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+        <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                <input *ngSwitchCase="'vin'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                <div *ngSwitchCase="'year'">
+                    Value > {{yearFilter}}
+                    <i class="fa fa-close" (click)="yearFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
+                    <!-- <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="yearFilter" [min]="1970" [max]="2010" (onChange)="onYearChange($event, dt)"></p-slider> -->
+                </div>
+                <p-dropdown *ngSwitchCase="'brand'" [options]="brands" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+                <p-multiSelect *ngSwitchCase="'color'" [options]="colors" defaultLabel="All Colors" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+                <input *ngSwitchCase="'price'" pInputText type="text" placeholder="Custom - Greater Than" (input)="dt.filter($event.target.value, col.field, 'custom')">
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

@@ -11,7 +11,45 @@ interface City {
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
-  styleUrls: [ './app.component.css' ],
+  styles: [`
+        .ui-table.ui-table-cars .ui-table-caption.ui-widget-header {
+            border: 0 none;
+            padding: 12px;
+            text-align: left;
+            font-size: 20px;
+        }
+
+        .ui-column-filter {
+            margin-top: 1em;
+        }
+
+        .ui-column-filter .ui-multiselect-label {
+            font-weight: 500;
+        }
+        
+        .ui-table.ui-table-cars .ui-table-thead > tr > th {
+            border: 0 none;
+            text-align: left;
+        }
+        
+        .ui-table-globalfilter-container {
+            float: right;
+            display: inline;
+        }
+
+        .ui-table.ui-table-cars .ui-table-tbody > tr > td {
+            border: 0 none;
+        }
+
+        .ui-table.ui-table-cars .ui-table-tbody .ui-column-title {
+            font-size: 16px;
+        }
+
+        .ui-table.ui-table-cars .ui-paginator {
+            border: 0 none;
+            padding: 1em;
+        }
+    ` ],
 })
 export class AppComponent implements OnInit {
    datasource: Car[];
@@ -45,10 +83,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.getOtherData();
         //datasource imitation
-        this.carService.getCarsLarge().then(cars => {
-            this.datasource = cars;
-            this.totalRecords = this.datasource.length;
-        });
+       
 
         this.cols = [
             { field: 'vin', header: 'Vin', width: '20%' },
@@ -56,11 +91,19 @@ export class AppComponent implements OnInit {
             { field: 'brand', header: 'Brand', width: '33%' },
             { field: 'color', header: 'Color' }
         ];
-
-        this.loading = true;
+        this.getCars();
+        // this.loading = true;
         setTimeout(()=> {this.placeholderText = 'It has changed'}, 5000)
     }
 
+    getCars(){
+       this.carService.getCarsLarge().then(cars => {
+            this.datasource = cars;
+            this.cars = this.datasource;
+            // this.cars = cars
+            this.totalRecords = this.datasource.length;
+        });
+    }
     loadCarsLazy(event) {  
         this.loading = true;
 
@@ -77,7 +120,8 @@ export class AppComponent implements OnInit {
                 this.cars = this.datasource.slice(event.first, (event.first + event.rows));
                 this.loading = false;
             }
-        }, 1000);
+        }, 100);
+
     }
 
     buttonClick(){
@@ -124,6 +168,7 @@ export class AppComponent implements OnInit {
     }
 
     onRowSelect(event) {
+        console.log(event)
         this.newCar = false;
         this.car = this.cloneCar(event.data);
         this.displayDialog = true;
@@ -135,5 +180,12 @@ export class AppComponent implements OnInit {
             car[prop] = c[prop];
         }
         return car;
+    }
+
+    cancel(){
+      this.newCar = false;
+      this.car = null;
+      this.displayDialog = false;
+
     }
 }
