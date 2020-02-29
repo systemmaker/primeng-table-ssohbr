@@ -1,4 +1,4 @@
-<p-dropdown [options]="cities2" [(ngModel)]="selectedCity2" tooltip="hello">
+<!-- <p-dropdown [options]="cities2" [(ngModel)]="selectedCity2" tooltip="hello">
       <ng-template let-city pTemplate="item"> 
         <div [pTooltip]="city.title">{{city.label}}</div>
     </ng-template>
@@ -7,11 +7,12 @@
 <hr>
 <p-menu #menu [popup]="true" [model]="cities2"></p-menu>
 <button type="button" pButton icon="fa fa-fw fa-list" label="Show" (click)="menu.toggle($event)"></button>
-<hr>
+<hr> -->
 <!-- [lazy]="true" (onLazyLoad)="loadCarsLazy($event)"  -->
+<p-toast [style]="{marginTop: '80px'}"></p-toast>
 <p-table #dt [columns]="cols" [value]="cars" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" 
-[rowsPerPageOptions]="pageSizeOptions" dataKey="vin" [resizableColumns]="true" columnResizeMode="fit" selectionMode="single" [(selection)]="selectedCar" 
-(onRowSelect)="onRowSelect($event)" styleClass="ui-table-cars" > 
+[rowsPerPageOptions]="pageSizeOptions" dataKey="vin" [resizableColumns]="true" columnResizeMode="fit" selectionMode="single" [(selection)]="selectedCar" [(contextMenuSelection)]="selectedCar"
+(onRowSelect)="onRowSelect($event)" styleClass="ui-table-cars" [contextMenu]="cm"> 
     <ng-template pTemplate="header" let-columns>
         <tr>
             <!-- [pSortableColumn]="col.field" -->
@@ -40,7 +41,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData">
+        <tr [pSelectableRow]="rowData" [pContextMenuRow]="rowData">
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>
@@ -102,40 +103,4 @@
     </p-footer>
 </p-dialog>
 
-
-
-<p-table [columns]="cols" [value]="cars" [paginator]="true" [rows]="10">
-    <!-- <ng-template pTemplate="caption">
-        <div style="text-align: right">        
-            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-            <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
-        </div>
-    </ng-template> -->
-    <ng-template pTemplate="header" let-columns>
-        <tr>
-            <th *ngFor="let col of columns">
-                {{col.header}}
-            </th>
-        </tr>
-        <tr>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                <input *ngSwitchCase="'vin'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                <div *ngSwitchCase="'year'">
-                    Value > {{yearFilter}}
-                    <i class="fa fa-close" (click)="yearFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
-                    <!-- <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="yearFilter" [min]="1970" [max]="2010" (onChange)="onYearChange($event, dt)"></p-slider> -->
-                </div>
-                <p-dropdown *ngSwitchCase="'brand'" [options]="brands" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
-                <p-multiSelect *ngSwitchCase="'color'" [options]="colors" defaultLabel="All Colors" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
-                <input *ngSwitchCase="'price'" pInputText type="text" placeholder="Custom - Greater Than" (input)="dt.filter($event.target.value, col.field, 'custom')">
-            </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData">
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
-            </td>
-        </tr>
-    </ng-template>
-</p-table>
+<p-contextMenu #cm [model]="items"></p-contextMenu>

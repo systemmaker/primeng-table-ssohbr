@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Car, LazyLoadEvent } from './types';
 import { CarService } from './car.service';
-
-import {SelectItem} from 'primeng/api';
+import {SelectItem} from 'primeng/components/common/api';
+import {Message} from 'primeng/components/common/api';
+import {MessageService} from 'primeng/components/common/messageservice';
 
 interface City {
   name: string;
@@ -11,47 +12,23 @@ interface City {
 @Component({
   selector: 'my-app',
   templateUrl: './app.component.html',
-  styles: [`
-        .ui-table.ui-table-cars .ui-table-caption.ui-widget-header {
-            border: 0 none;
-            padding: 12px;
-            text-align: left;
-            font-size: 20px;
-        }
+  providers: [MessageService]
+//   styles: [`
+//         :host ::ng-deep .ui-table .ui-table-thead > tr > th {
+//             position: -webkit-sticky;
+//             position: sticky;
+//             top: 70px;
+//         }
 
-        .ui-column-filter {
-            margin-top: 1em;
-        }
-
-        .ui-column-filter .ui-multiselect-label {
-            font-weight: 500;
-        }
-        
-        .ui-table.ui-table-cars .ui-table-thead > tr > th {
-            border: 0 none;
-            text-align: left;
-        }
-        
-        .ui-table-globalfilter-container {
-            float: right;
-            display: inline;
-        }
-
-        .ui-table.ui-table-cars .ui-table-tbody > tr > td {
-            border: 0 none;
-        }
-
-        .ui-table.ui-table-cars .ui-table-tbody .ui-column-title {
-            font-size: 16px;
-        }
-
-        .ui-table.ui-table-cars .ui-paginator {
-            border: 0 none;
-            padding: 1em;
-        }
-    ` ],
+//         @media screen and (max-width: 64em) {
+//             :host ::ng-deep .ui-table .ui-table-thead > tr > th {
+//                 top: 100px;
+//             }
+//         }
+// `]
 })
 export class AppComponent implements OnInit {
+   items: MenuItem[];
    datasource: Car[];
 
     cars: Car[];
@@ -76,7 +53,7 @@ export class AppComponent implements OnInit {
     loading: boolean;
     pageSizeOptions = [10, 25, 50, {showAll: 'All'}]
     disable = false;
-    constructor(private carService: CarService) {
+    constructor(private carService: CarService, private messageService: MessageService) {
       setTimeout(()=>{this.disable = true}, 5000)
      }
 
@@ -90,6 +67,11 @@ export class AppComponent implements OnInit {
             { field: 'year', header: 'Year' },
             { field: 'brand', header: 'Brand', width: '33%' },
             { field: 'color', header: 'Color' }
+        ];
+
+        this.items = [
+            { label: 'View', icon: 'pi pi-search', command: (event) => this.viewCar(this.selectedCar) },
+            { label: 'Delete', icon: 'pi pi-times', command: (event) => this.deleteCar(this.selectedCar) }
         ];
         this.getCars();
         // this.loading = true;
@@ -187,5 +169,24 @@ export class AppComponent implements OnInit {
       this.car = null;
       this.displayDialog = false;
 
+    }
+
+
+
+    viewCar(car: Car) {
+        this.messageService.add({ severity: 'info', summary: 'Car Selected', detail: car.vin + ' - ' + car.brand });
+    }
+
+    deleteCar(car: Car) {
+        let index = -1;
+        for (let i = 0; i < this.cars.length; i++) {
+            if (this.cars[i].vin == car.vin) {
+                index = i;
+                break;
+            }
+        }
+        this.cars.splice(index, 1);
+
+        this.messageService.add({ severity: 'info', summary: 'Car Deleted', detail: car.vin + ' - ' + car.brand });
     }
 }

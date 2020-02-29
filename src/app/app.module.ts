@@ -16,8 +16,12 @@ import {TooltipModule} from 'primeng/tooltip';
 import {MenuModule} from 'primeng/menu';
 import {MenuItem} from 'primeng/api';
 import {DialogModule} from 'primeng/dialog';
-
+import {ContextMenuModule} from 'primeng/contextmenu';
 import {MultiSelectModule} from 'primeng/multiselect';
+
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import {ToastModule} from 'primeng/toast';
 @NgModule({
   imports:      [ 
     BrowserModule, 
@@ -30,6 +34,8 @@ import {MultiSelectModule} from 'primeng/multiselect';
     MultiSelectModule,
     TooltipModule,
     MenuModule,
+    ToastModule,
+    ContextMenuModule,
     CommonModule, 
     ReactiveFormsModule,
     BrowserAnimationsModule,
