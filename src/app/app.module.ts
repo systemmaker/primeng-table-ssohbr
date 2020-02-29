@@ -22,6 +22,8 @@ import {MultiSelectModule} from 'primeng/multiselect';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import {ToastModule} from 'primeng/toast';
+
+import {CalendarModule} from 'primeng/calendar';
 @NgModule({
   imports:      [ 
     BrowserModule, 
@@ -36,6 +38,7 @@ import {ToastModule} from 'primeng/toast';
     MenuModule,
     ToastModule,
     ContextMenuModule,
+    CalendarModule,
     CommonModule, 
     ReactiveFormsModule,
     BrowserAnimationsModule,

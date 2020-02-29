@@ -5,6 +5,7 @@ export interface Car {
     color?;
     price?;
     saleDate?;
+    date?;
 }
 
 interface SortMeta {

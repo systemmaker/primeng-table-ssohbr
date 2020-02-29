@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Car, LazyLoadEvent } from './types';
 import { CarService } from './car.service';
-import {SelectItem} from 'primeng/components/common/api';
+import {SelectItem, MenuItem} from 'primeng/components/common/api';
 import {Message} from 'primeng/components/common/api';
 import {MessageService} from 'primeng/components/common/messageservice';
 
@@ -66,7 +66,8 @@ export class AppComponent implements OnInit {
             { field: 'vin', header: 'Vin', width: '20%' },
             { field: 'year', header: 'Year' },
             { field: 'brand', header: 'Brand', width: '33%' },
-            { field: 'color', header: 'Color' }
+            { field: 'color', header: 'Color' },
+            { field: 'date', header: 'date' }
         ];
 
         this.items = [
@@ -168,7 +169,6 @@ export class AppComponent implements OnInit {
       this.newCar = false;
       this.car = null;
       this.displayDialog = false;
-
     }
 
 
@@ -178,15 +178,19 @@ export class AppComponent implements OnInit {
     }
 
     deleteCar(car: Car) {
-        let index = -1;
-        for (let i = 0; i < this.cars.length; i++) {
-            if (this.cars[i].vin == car.vin) {
-                index = i;
-                break;
-            }
-        }
-        this.cars.splice(index, 1);
+        this.delete();
+        this.messageService.add({ severity: 'error', summary: 'Car Deleted', detail: car.vin + ' - ' + car.brand });
+    }
 
-        this.messageService.add({ severity: 'info', summary: 'Car Deleted', detail: car.vin + ' - ' + car.brand });
+    transferDate(m){
+      // // console.log(m);
+      // let dateString = m;
+      // if(m){
+      //   let obj = {...m}
+      //   // console.log(m.getFullYear());
+      //   // dateString = obj.getFullYear() + "/" + (obj.getMonth() +1) + "/" + obj.getDate()
+      // }
+      // console.log(dateString)
+      // return m;
     }
 }
