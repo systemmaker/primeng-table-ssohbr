@@ -38,9 +38,9 @@ export class AppComponent implements OnInit {
     totalRecords: number;
 
     cols: any[];
-
+    carDepot: SelectItem[];
     cities2: SelectItem[] = [
-      {label:'Select City', value:null},
+        {label:'Select City', value:null},
         {label: 'New York', value: 'NY'},
         {label: 'Rome', value: 'RM'},
         {label: 'London', value: 'LDN', disabled: true, title: 'Doesn\'t work and this message needs to be longer than it is right now.'},
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit {
     disable = false;
     constructor(private carService: CarService, private messageService: MessageService) {
       setTimeout(()=>{this.disable = true}, 5000)
-     }
+    }
 
     ngOnInit() {
         this.getOtherData();
@@ -69,7 +69,18 @@ export class AppComponent implements OnInit {
             { field: 'color', header: 'Color' },
             { field: 'date', header: 'date' }
         ];
-
+        this.carDepot = [
+            {label: 'Audi', value: 'Audi'},
+            {label: 'BMW', value: 'BMW'},
+            {label: 'Fiat', value: 'Fiat'},
+            {label: 'Ford', value: 'Ford'},
+            {label: 'Honda', value: 'Honda'},
+            {label: 'Jaguar', value: 'Jaguar'},
+            {label: 'Mercedes', value: 'Mercedes'},
+            {label: 'Renault', value: 'Renault'},
+            {label: 'VW', value: 'VW'},
+            {label: 'Volvo', value: 'Volvo'}
+        ];
         this.items = [
             { label: 'View', icon: 'pi pi-search', command: (event) => this.viewCar(this.selectedCar) },
             { label: 'Delete', icon: 'pi pi-times', command: (event) => this.deleteCar(this.selectedCar) }
@@ -83,7 +94,6 @@ export class AppComponent implements OnInit {
        this.carService.getCarsLarge().then(cars => {
             this.datasource = cars;
             this.cars = this.datasource;
-            // this.cars = cars
             this.totalRecords = this.datasource.length;
         });
     }
@@ -192,5 +202,23 @@ export class AppComponent implements OnInit {
       // }
       // console.log(dateString)
       // return m;
+    }
+
+    brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
+    filteredBrands: any[];
+    filterBrands(event) {
+        this.filteredBrands = [];
+        for(let i = 0; i < this.brands.length; i++) {
+            let brand = this.brands[i];
+            if (brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.filteredBrands.push(brand);
+            }
+        }
+    }
+
+
+    keyIn($event){
+      // console.log($event)
+      console.log("onKeyUp")
     }
 }

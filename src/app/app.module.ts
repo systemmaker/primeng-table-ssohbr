@@ -24,6 +24,8 @@ import {MessageModule} from 'primeng/message';
 import {ToastModule} from 'primeng/toast';
 
 import {CalendarModule} from 'primeng/calendar';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {InputTextareaModule} from 'primeng/inputtextarea';
 @NgModule({
   imports:      [ 
     BrowserModule, 
@@ -33,12 +35,14 @@ import {CalendarModule} from 'primeng/calendar';
     ButtonModule,
     DialogModule,
     DropdownModule,
+    InputTextareaModule,
     MultiSelectModule,
     TooltipModule,
     MenuModule,
     ToastModule,
     ContextMenuModule,
     CalendarModule,
+    AutoCompleteModule,
     CommonModule, 
     ReactiveFormsModule,
     BrowserAnimationsModule,
